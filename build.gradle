@@ -40,6 +40,7 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.1')
     implementation('com.googlecode.json-simple:json-simple:1.1.1')
+    implementation('org.hamcrest:hamcrest:2.2')
     implementation('com.dlsc.formsfx:formsfx-core:11.3.2') {
         exclude(group: 'org.openjfx')
     }
