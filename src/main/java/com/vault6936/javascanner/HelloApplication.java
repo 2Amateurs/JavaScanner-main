@@ -13,7 +13,9 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Fetcher get = new Fetcher();
-        get.sendHttpGETRequest();
+        MatchDataCollection data = new MatchDataCollection();
+        data.Parse(get.httpGetResponse());
+        System.out.println(data.getValue().get(0).toString());
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         Scene scene = new Scene(fxmlLoader.load(), (int) (screenBounds.getWidth()/1.5), (int) (screenBounds.getHeight()/1.5));

@@ -1,17 +1,20 @@
 package com.vault6936.javascanner;
+import com.vault6936.javascanner.util.ElapsedTime;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import org.json.simple.*;
 public class Fetcher {
     int teamID = 6936;
     String eventID = "2022alhu"; //should be changed to the most current event
     String URL = "https://www.thebluealliance.com/api/v3/team/frc" + teamID + "/event/" + eventID + "/" + "matches";
     String key = "GAHGTZ290bRxHnbX13UurGfvEgyUaHukRxK2ktrMg2XCNyvykH1IibGqasL3al9I";
+    ElapsedTime timer = new ElapsedTime();
     public Fetcher() {}
 
-    public void sendHttpGETRequest() throws IOException {
+    public String httpGetResponse() throws IOException {
+        timer.reset();
         URL url = new URL(URL);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
@@ -27,11 +30,10 @@ public class Fetcher {
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             } in.close();
-
-            // print result
-            System.out.println(response.toString());
+            String responseString = response.toString();
+            return responseString;
         } else {
-            System.out.println("GET request failed.");
+            return "400";
         }
     }
 }
