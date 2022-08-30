@@ -29,7 +29,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.vault6936.javascanner'
-    mainClass = 'com.vault6936.javascanner.HelloApplication'
+    mainClass = 'com.vault6936.javascanner.mainApplication'
 }
 
 javafx {

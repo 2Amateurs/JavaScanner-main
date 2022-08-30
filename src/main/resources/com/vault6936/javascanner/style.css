@@ -1,3 +1,10 @@
 #body {
 -fx-background-color: #3470d1;
 }
+#grid1 {
+-fx-background-color: white;
+}
+#label1 {
+-fx-text-fill: #3470d1;
+-fx-background-color: white;
+}

@@ -5,13 +5,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-public class Fetcher {
+public class TBAFetcher {
     int teamID = 6936;
     String eventID = "2022alhu"; //should be changed to the most current event
     String URL = "https://www.thebluealliance.com/api/v3/team/frc" + teamID + "/event/" + eventID + "/" + "matches";
     String key = "GAHGTZ290bRxHnbX13UurGfvEgyUaHukRxK2ktrMg2XCNyvykH1IibGqasL3al9I";
     ElapsedTime timer = new ElapsedTime();
-    public Fetcher() {}
+    public TBAFetcher() {}
 
     public String httpGetResponse() throws IOException {
         timer.reset();
