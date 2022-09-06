@@ -37,11 +37,25 @@
          </GridPane>
          <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER">
             <children>
-               <Label fx:id="label1" id="testItem" text="Label1">
+               <Label fx:id="label1" text="Label1" textAlignment="CENTER">
                   <font>
-                     <Font name="Britannic Bold" size="24.0" />
+                     <Font name="Britannic Bold" size="48" />
                   </font></Label>
             </children></TextFlow>
+          <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER" GridPane.columnIndex="1">
+              <Label fx:id="label2" text="Label2">
+                  <font>
+                      <Font name="Britannic Bold" size="48" />
+                  </font></Label>
+          </TextFlow>
+         <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER" GridPane.rowIndex="2">
+            <children>
+                <Label fx:id="label3" text="Label3">
+                    <font>
+                        <Font name="Britannic Bold" size="48" />
+                    </font></Label>
+            </children>
+         </TextFlow>
       </children>
    </GridPane>
 </VBox>

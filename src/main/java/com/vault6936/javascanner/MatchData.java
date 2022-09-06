@@ -74,7 +74,7 @@ public class MatchData {
             return this;
         }
         public MatchData build () {
-            return new MatchData(actual_time, event_key, key, match_number, post_result_time, predicted_time, set_number, time);
+            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000);
         }
 
     }
