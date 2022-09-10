@@ -36,7 +36,7 @@ public class MatchDataCollection {
             .build();
         dataCollection.add(object);
     }
-    public ArrayList getValue() {
-        return this.dataCollection;
+    public MatchData get(int index) {
+        return (MatchData) this.dataCollection.get(index);
     }
 }

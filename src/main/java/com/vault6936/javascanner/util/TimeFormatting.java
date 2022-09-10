@@ -1,7 +1,7 @@
 package com.vault6936.javascanner.util;
 
 import java.time.ZonedDateTime;
-import java.util.TimeZone;
+import java.time.temporal.ChronoUnit;
 
 public class TimeFormatting {
     private TimeFormatting(){}
@@ -26,5 +26,21 @@ public class TimeFormatting {
     public static String timeToString(ZonedDateTime time) {
         String string = toTwelveHour(time.getHour(), time.getMinute(), time.getSecond());
         return string;
+    }
+    private static String ifZero(long value) {
+        if (value == 0) {
+            return "";
+        }
+        return String.valueOf(value);
+    }
+    public static String timeUntil(ZonedDateTime time1, ZonedDateTime time2) {
+        long totalSeconds;
+        long remainder;
+        totalSeconds = time1.until(time2, ChronoUnit.SECONDS);
+        long hours = (long) Math.floor(totalSeconds / (60*60));
+        remainder = totalSeconds % (60*60);
+        long minutes = (long) Math.floor(remainder / 60);
+        long seconds = remainder % 60;
+        return ifZero(hours) + "h " + ifZero(minutes) + "m " + seconds + "s";
     }
 }

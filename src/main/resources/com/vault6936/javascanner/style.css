@@ -4,15 +4,7 @@
 #grid1 {
 /*-fx-background-color: white;*/
 }
-#label1 {
--fx-text-fill: #3470d1;
--fx-background-color: white;
-}
-#label2 {
--fx-text-fill: #3470d1;
--fx-background-color: white;
-}
-#label3 {
+.text1 {
 -fx-text-fill: #3470d1;
 -fx-background-color: white;
 }

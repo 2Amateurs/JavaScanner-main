@@ -13,28 +13,37 @@ public class FormattedData {
     String actual_time;
     String event_key;
     String key;
-    long match_number;
+    String match_number;
     long post_result_time;
     String predicted_time;
     long set_number;
     String time;
     String current_time;
-
-    public FormattedData(String actual_time, long match_number, String predictedTime, String time) {
+    String matchNumber;
+    String timeUntil;
+    ZonedDateTime predictedTime_noFormat;
+    ZonedDateTime currentTime_noFormat;
+    public FormattedData(String actual_time, String match_number, String predictedTime, String time, ZonedDateTime predictedTime_noFormat) {
         this.actual_time = actual_time;
         this.match_number = match_number;
         this.predicted_time = predictedTime;
         this.time = time;
+        this.predictedTime_noFormat = predictedTime_noFormat;
     }
     public void setCurrentTime() {
         ZonedDateTime now = ZonedDateTime.now();
+        this.currentTime_noFormat = now;
         this.current_time = TimeFormatting.timeToString(now);
+    }
+    public void update() {
+        setCurrentTime();
+        this.timeUntil = TimeFormatting.timeUntil(currentTime_noFormat, predictedTime_noFormat);
     }
     public static class Builder {
         ZonedDateTime actual_time;
         String event_key;
         String key;
-        long match_number;
+        String match_number;
         long post_result_time;
         ZonedDateTime predicted_time;
         long set_number;
@@ -47,8 +56,8 @@ public class FormattedData {
             this.actual_time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), this.zone);
             return this;
         }
-        public Builder setMatchNumber(int number) {
-            this.match_number = number;
+        public Builder setMatchNumber(long number) {
+            this.match_number = String.valueOf(number);
             return this;
         }
         public Builder setPredictedTime(long time) {
@@ -60,7 +69,7 @@ public class FormattedData {
             return this;
         }
         public FormattedData build() {
-            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, TimeFormatting.timeToString(predicted_time), TimeFormatting.timeToString(time));
+            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, TimeFormatting.timeToString(predicted_time), TimeFormatting.timeToString(time), predicted_time);
         }
     }
     public static Builder getBuilder() {
