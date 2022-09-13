@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 
 public class FXHelper<T extends Node> {
-    private Scene scene;
+    private final Scene scene;
     public FXHelper(Scene scene){
         this.scene = scene;
     }

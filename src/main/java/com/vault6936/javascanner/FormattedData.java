@@ -1,9 +1,6 @@
 package com.vault6936.javascanner;
 
 import java.time.*;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.SimpleTimeZone;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 import com.vault6936.javascanner.util.TimeFormatting;
@@ -21,22 +18,25 @@ public class FormattedData {
     String current_time;
     String matchNumber;
     String timeUntil;
+    String rank;
     ZonedDateTime predictedTime_noFormat;
     ZonedDateTime currentTime_noFormat;
-    public FormattedData(String actual_time, String match_number, String predictedTime, String time, ZonedDateTime predictedTime_noFormat) {
+    public FormattedData(String actual_time, String match_number, ZonedDateTime predictedTime, String time, String rank) {
         this.actual_time = actual_time;
         this.match_number = match_number;
-        this.predicted_time = predictedTime;
+        this.predicted_time = TimeFormatting.timeToString(predictedTime);
+        this.predictedTime_noFormat = predictedTime;
         this.time = time;
-        this.predictedTime_noFormat = predictedTime_noFormat;
+        this.rank = rank;
     }
-    public void setCurrentTime() {
+    public long getCurrentTime() {
         ZonedDateTime now = ZonedDateTime.now();
         this.currentTime_noFormat = now;
         this.current_time = TimeFormatting.timeToString(now);
+        return now.toEpochSecond();
     }
     public void update() {
-        setCurrentTime();
+        getCurrentTime();
         this.timeUntil = TimeFormatting.timeUntil(currentTime_noFormat, predictedTime_noFormat);
     }
     public static class Builder {
@@ -49,6 +49,7 @@ public class FormattedData {
         long set_number;
         ZonedDateTime time;
         ZoneId zone;
+        long rank;
         public Builder() {
             this.zone = TimeZone.getDefault().toZoneId();
         }
@@ -68,8 +69,12 @@ public class FormattedData {
             this.time  = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), this.zone);
             return this;
         }
+        public Builder setRank(long rank) {
+            this.rank = rank;
+            return this;
+        }
         public FormattedData build() {
-            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, TimeFormatting.timeToString(predicted_time), TimeFormatting.timeToString(time), predicted_time);
+            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, predicted_time, TimeFormatting.timeToString(time), String.valueOf(rank));
         }
     }
     public static Builder getBuilder() {

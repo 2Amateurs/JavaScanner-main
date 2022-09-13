@@ -15,8 +15,8 @@ public class TimeFormatting {
         String formattedMinute = formatToTime(minute);
         String formattedSecond = formatToTime(second);
         String timeOfDay;
-        if (hour > 12) {
-            hour -= 12;
+        if (hour > 11) {
+            if (hour > 12) hour -= 12;
             timeOfDay = " PM";
         } else {
             timeOfDay = " AM";
@@ -42,5 +42,8 @@ public class TimeFormatting {
         long minutes = (long) Math.floor(remainder / 60);
         long seconds = remainder % 60;
         return ifZero(hours) + "h " + ifZero(minutes) + "m " + seconds + "s";
+    }
+    public static long getCurrentTime() {
+        return ZonedDateTime.now().toEpochSecond() * 1000;
     }
 }

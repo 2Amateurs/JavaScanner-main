@@ -1,14 +1,5 @@
 package com.vault6936.javascanner;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javafx.beans.binding.StringBinding;
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.StringReader;
 
 public class MatchData {
 
@@ -20,8 +11,9 @@ public class MatchData {
     long predicted_time;
     long set_number;
     long time;
+    long rank;
 
-    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time) {
+    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time, long rank) {
         this.actual_time = actual_time;
         this.event_key = event_key;
         this.key = key;
@@ -30,6 +22,7 @@ public class MatchData {
         this.predicted_time = predicted_time;
         this.set_number = set_number;
         this.time = time;
+        this.rank = rank;
     }
     public static class Builder {
         long actual_time;
@@ -40,6 +33,7 @@ public class MatchData {
         long predicted_time;
         long set_number;
         long time;
+        long rank;
 
         public Builder setActualTime(long time) {
             this.actual_time = time;
@@ -73,8 +67,12 @@ public class MatchData {
             this.time = time;
             return this;
         }
+        public Builder setRank(long rank) {
+            this.rank = rank;
+            return this;
+        }
         public MatchData build () {
-            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000);
+            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000, rank);
         }
 
     }
