@@ -32,6 +32,7 @@ public class mainApplication extends Application {
     Text matchNumber = textGetter.getNode("#matchNumber");
     Text clockDisplay = textGetter.getNode("#clock");
     Text smallMatchNumber2 = textGetter.getNode("#smallMatchNumber2");
+    Text rank = textGetter.getNode("#rank");
     Timer clockHandler = new Timer();
     clockUpdater clock;
     Timer refreshHandler = new Timer();
@@ -51,9 +52,9 @@ public class mainApplication extends Application {
         data.Parse(get.httpGetResponse());
         refresh = new Refresher();
         refresh.initialize();
-        refreshHandler.schedule(refresh, 0, 30000);
+        refreshHandler.schedule(refresh, 0, 30000); //refreshes data every 30s
         clock = new clockUpdater();
-        clockHandler.schedule(clock, 0, 1000);
+        clockHandler.schedule(clock, 0, 1000); //updates clock every second
     }
     private class Refresher extends TimerTask {
 
@@ -95,6 +96,7 @@ public class mainApplication extends Application {
             matchTime2.setText(formattedData2.predicted_time);
             matchNumber.setText(formattedData1.match_number);
             smallMatchNumber2.setText(formattedData2.match_number);
+            rank.setText(formattedData1.rank);
             System.out.println(formattedData1.rank);
         }
         public void run() {

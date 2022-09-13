@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 public class TBAFetcher {
-    int teamID = 6936;
+    public static int teamID = 6936;
     String eventID = "2022alhu"; //should be changed to the most current event
     String URL1 = "https://www.thebluealliance.com/api/v3/team/frc" + teamID + "/event/" + eventID + "/" + "matches";
     String URL2 = "https://www.thebluealliance.com/api/v3/team/frc" + teamID + "/event/" + eventID + "/" + "status";

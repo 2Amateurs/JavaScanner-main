@@ -7,19 +7,18 @@ import java.util.ArrayList;
 
 public class MatchDataCollection {
     public MatchDataCollection() {}
-    private ArrayList<MatchData> dataCollection = new ArrayList<>();
+    private final ArrayList<MatchData> dataCollection = new ArrayList<>();
     JSONParser parser = new JSONParser();
     public void Parse(String[] data) {
         try {
-            Object obj1 = parser.parse(data[0]);
-            Object obj2 = parser.parse(data[1]);
-            JSONArray jsonObject1 = (JSONArray) obj1;
-            JSONObject jsonObject2 = (JSONObject) ( (JSONObject) obj2 ).get("qual");
-            JSONObject jsonObject3 = (JSONObject) jsonObject2.get("ranking");
-            long rank = (long) jsonObject3.get("rank");
-            jsonObject1.toArray();
+            Object matchInfo = parser.parse(data[0]);
+            Object rankInfo = parser.parse(data[1]);
+            JSONArray matches = (JSONArray) matchInfo;
+            JSONObject qual = (JSONObject) ( (JSONObject) rankInfo ).get("qual");
+            JSONObject rankings = (JSONObject) qual.get("ranking");
+            long rank = (long) rankings.get("rank");
             System.out.println(rank);
-            for (Object item : jsonObject1) {
+            for (Object item : matches) {
                 addItem((JSONObject) item, rank);
             }
         } catch (ParseException e) {
@@ -27,16 +26,30 @@ public class MatchDataCollection {
         }
 
     }
-    public void addItem(JSONObject jsonObject1, long rank) {
+    private String findAlliance(String[] blueTeamKeys, String[] redTeamKeys) {
+        for(String key : blueTeamKeys) {
+            if(key == ("frc" + TBAFetcher.teamID)) {
+                return "blue";
+            }
+        }
+        return "red";
+    }
+    public void addItem(JSONObject match, long rank) {
+        JSONObject alliances = (JSONObject) match.get("alliances");
+        JSONObject blueAlliance = (JSONObject) alliances.get("blue");
+        JSONObject redAlliance = (JSONObject) alliances.get("red");
+        String[] blueTeamKeys = (String[]) ((JSONArray) blueAlliance.get("team_keys")).toArray();
+        String[] redTeamKeys = (String[]) ((JSONArray) redAlliance.get("team_keys")).toArray();
+        System.out.println(blueTeamKeys[0].toString());
         MatchData object = MatchData.getBuilder()
-            .setActualTime((long) jsonObject1.get("actual_time"))
-            .setEventKey((String) jsonObject1.get("event_key"))
-            .setKey((String) jsonObject1.get("key"))
-            .setMatchNumber((long) jsonObject1.get("match_number"))
-            .setPostResultTime((long) jsonObject1.get("post_result_time"))
-            .setPredictedTime((long) jsonObject1.get("predicted_time"))
-            .setSetNumber((long) jsonObject1.get("set_number"))
-            .setTime((long) jsonObject1.get("time"))
+            .setActualTime((long) match.get("actual_time"))
+            .setEventKey((String) match.get("event_key"))
+            .setKey((String) match.get("key"))
+            .setMatchNumber((long) match.get("match_number"))
+            .setPostResultTime((long) match.get("post_result_time"))
+            .setPredictedTime((long) match.get("predicted_time"))
+            .setSetNumber((long) match.get("set_number"))
+            .setTime((long) match.get("time"))
             .setRank(rank)
             .build();
         dataCollection.add(object);
@@ -51,7 +64,7 @@ public class MatchDataCollection {
         Integer index = null;
         for(int i = 0; i < dataCollection.size(); i++) {
             if((dataCollection.get(i).time > currentTime) && index == null) {
-                index = Integer.valueOf(i);
+                index = i;
                 return index;
             }
         }
