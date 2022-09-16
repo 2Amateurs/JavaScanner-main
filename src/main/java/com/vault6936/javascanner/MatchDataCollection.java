@@ -26,21 +26,28 @@ public class MatchDataCollection {
         }
 
     }
-    private String findAlliance(String[] blueTeamKeys, String[] redTeamKeys) {
-        for(String key : blueTeamKeys) {
-            if(key == ("frc" + TBAFetcher.teamID)) {
-                return "blue";
+    private String findAlliance(Object[] blueTeamKeys, Object[] redTeamKeys) {
+        String myAlliance = null;
+        for(Object key : blueTeamKeys) {
+            System.out.println(key.toString());
+            if(key.toString().equals("frc" + TBAFetcher.teamID)) {
+                myAlliance = "blue";
             }
         }
-        return "red";
+        if (myAlliance == "blue") {
+            return "blue";
+        }
+        else {
+            return "red";
+        }
     }
     public void addItem(JSONObject match, long rank) {
         JSONObject alliances = (JSONObject) match.get("alliances");
         JSONObject blueAlliance = (JSONObject) alliances.get("blue");
         JSONObject redAlliance = (JSONObject) alliances.get("red");
-        String[] blueTeamKeys = (String[]) ((JSONArray) blueAlliance.get("team_keys")).toArray();
-        String[] redTeamKeys = (String[]) ((JSONArray) redAlliance.get("team_keys")).toArray();
-        System.out.println(blueTeamKeys[0].toString());
+        Object[] blueTeamKeys = ((JSONArray) blueAlliance.get("team_keys")).toArray();
+        Object[] redTeamKeys = ((JSONArray) redAlliance.get("team_keys")).toArray();
+        System.out.println(findAlliance(blueTeamKeys, redTeamKeys));
         MatchData object = MatchData.getBuilder()
             .setActualTime((long) match.get("actual_time"))
             .setEventKey((String) match.get("event_key"))

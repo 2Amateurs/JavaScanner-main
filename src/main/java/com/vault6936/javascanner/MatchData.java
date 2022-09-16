@@ -12,8 +12,9 @@ public class MatchData {
     long set_number;
     long time;
     long rank;
+    String myAlliance;
 
-    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time, long rank) {
+    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time, long rank, String myAlliance) {
         this.actual_time = actual_time;
         this.event_key = event_key;
         this.key = key;
@@ -23,6 +24,7 @@ public class MatchData {
         this.set_number = set_number;
         this.time = time;
         this.rank = rank;
+        this.myAlliance = myAlliance;
     }
     public static class Builder {
         long actual_time;
@@ -34,6 +36,7 @@ public class MatchData {
         long set_number;
         long time;
         long rank;
+        String myAlliance;
 
         public Builder setActualTime(long time) {
             this.actual_time = time;
@@ -71,8 +74,12 @@ public class MatchData {
             this.rank = rank;
             return this;
         }
+        public Builder setAlliance(String alliance) {
+            this.myAlliance = alliance;
+            return this;
+        }
         public MatchData build () {
-            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000, rank);
+            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000, rank, myAlliance);
         }
 
     }
