@@ -19,15 +19,17 @@ public class FormattedData {
     String matchNumber;
     String timeUntil;
     String rank;
+    String alliance;
     ZonedDateTime predictedTime_noFormat;
     ZonedDateTime currentTime_noFormat;
-    public FormattedData(String actual_time, String match_number, ZonedDateTime predictedTime, String time, String rank) {
+    public FormattedData(String actual_time, String match_number, ZonedDateTime predictedTime, String time, String rank, String alliance) {
         this.actual_time = actual_time;
         this.match_number = match_number;
         this.predicted_time = TimeFormatting.timeToString(predictedTime);
         this.predictedTime_noFormat = predictedTime;
         this.time = time;
         this.rank = rank;
+        this.alliance = alliance;
     }
     public long getCurrentTime() {
         ZonedDateTime now = ZonedDateTime.now();
@@ -50,6 +52,7 @@ public class FormattedData {
         ZonedDateTime time;
         ZoneId zone;
         long rank;
+        String alliance;
         public Builder() {
             this.zone = TimeZone.getDefault().toZoneId();
         }
@@ -73,8 +76,12 @@ public class FormattedData {
             this.rank = rank;
             return this;
         }
+        public Builder setAlliance(String alliance) {
+            this.alliance = alliance;
+            return this;
+        }
         public FormattedData build() {
-            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, predicted_time, TimeFormatting.timeToString(time), String.valueOf(rank));
+            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, predicted_time, TimeFormatting.timeToString(time), String.valueOf(rank), alliance);
         }
     }
     public static Builder getBuilder() {

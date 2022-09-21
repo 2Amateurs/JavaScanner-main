@@ -7,6 +7,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
@@ -25,6 +29,8 @@ public class mainApplication extends Application {
     FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("window.fxml"));
     Rectangle2D screenBounds = Screen.getPrimary().getBounds();
     Scene scene = new Scene(fxmlLoader.load(), (int) (screenBounds.getWidth()/1.1), (int) (screenBounds.getHeight()/1.1));
+    FXHelper<VBox> vBoxGetter = new FXHelper<>(scene);
+    VBox body = vBoxGetter.getNode("#body");
     FXHelper<Text> textGetter = new FXHelper<>(scene);
     Text nextMatchTime = textGetter.getNode("#nextMatchTime");
     Text matchTime2 = textGetter.getNode("#matchTime2");
@@ -69,7 +75,7 @@ public class mainApplication extends Application {
             int nextMatch;
             if (index == null) {
                 System.out.println("No upcoming matches!");
-                currentMatch = 0;
+                currentMatch = 3;
                 nextMatch = 5;
             } else {
                 currentMatch = index.intValue();
@@ -85,6 +91,7 @@ public class mainApplication extends Application {
                     .setTime(data.get(currentMatch).time)
                     .setMatchNumber(data.get(currentMatch).match_number)
                     .setRank(data.get(currentMatch).rank)
+                    .setAlliance(data.get(currentMatch).myAlliance)
                     .build();
             formattedData2 = FormattedData.getBuilder()
                     .setActualTime(data.get(nextMatch).actual_time)
@@ -92,6 +99,11 @@ public class mainApplication extends Application {
                     .setTime(data.get(nextMatch).time)
                     .setMatchNumber(data.get(nextMatch).match_number)
                     .build();
+            if (formattedData1.alliance == "blue") {
+                body.setStyle("-fx-background-color: #3470d1");
+            } else {
+                body.setStyle("-fx-background-color: #d62e2e");
+            }
             nextMatchTime.setText(formattedData1.predicted_time);
             matchTime2.setText(formattedData2.predicted_time);
             matchNumber.setText(formattedData1.match_number);
