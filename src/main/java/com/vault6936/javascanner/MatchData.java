@@ -1,5 +1,12 @@
 package com.vault6936.javascanner;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+
 
 public class MatchData {
 
@@ -13,8 +20,10 @@ public class MatchData {
     long time;
     long rank;
     String myAlliance;
+    String[] partnerIDs;
+    String[] partnerNames;
 
-    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time, long rank, String myAlliance) {
+    private MatchData(long actual_time, String event_key, String key, long match_number, long post_result_time, long predicted_time, long set_number, long time, long rank, String myAlliance, String[] partnerIDs) {
         this.actual_time = actual_time;
         this.event_key = event_key;
         this.key = key;
@@ -25,6 +34,26 @@ public class MatchData {
         this.time = time;
         this.rank = rank;
         this.myAlliance = myAlliance;
+        this.partnerIDs = partnerIDs;
+    }
+    private String[] parseNameData(String[] data) {
+        JSONParser parser = new JSONParser();
+        String team1Name;
+        String team2Name;
+        try {
+            Object team1Obj = parser.parse(data[0]);
+            Object team2Obj = parser.parse(data[1]);
+            JSONObject team1 = (JSONObject) team1Obj;
+            JSONObject team2 = (JSONObject) team2Obj;
+            team1Name = team1.get("nickname").toString();
+            team2Name = team2.get("nickname").toString();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return new String[]{team1Name, team2Name};
+    }
+    public void setPartners() throws IOException {
+        this.partnerNames = parseNameData(TBAFetcher.rawAlliancePartnerInfo(partnerIDs));
     }
     public static class Builder {
         long actual_time;
@@ -37,6 +66,7 @@ public class MatchData {
         long time;
         long rank;
         String myAlliance;
+        String[] partnerIDs;
 
         public Builder setActualTime(long time) {
             this.actual_time = time;
@@ -78,8 +108,12 @@ public class MatchData {
             this.myAlliance = alliance;
             return this;
         }
+        public Builder setPartnerIDs(String[] partnerIDs) {
+            this.partnerIDs = partnerIDs;
+            return this;
+        }
         public MatchData build () {
-            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000, rank, myAlliance);
+            return new MatchData(actual_time*1000, event_key, key, match_number, post_result_time*1000, predicted_time*1000, set_number, time*1000, rank, myAlliance, partnerIDs);
         }
 
     }

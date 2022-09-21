@@ -7,25 +7,22 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class mainApplication extends Application {
-    Stage primaryStage;
-    TBAFetcher get = new TBAFetcher();
     MatchDataCollection data = new MatchDataCollection();
-    FormattedData formattedData1;
-    FormattedData formattedData2;
+    FormattedData currentMatchFormatted;
+    FormattedData nextMatchFormatted;
     FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("window.fxml"));
     Rectangle2D screenBounds = Screen.getPrimary().getBounds();
     Scene scene = new Scene(fxmlLoader.load(), (int) (screenBounds.getWidth()/1.1), (int) (screenBounds.getHeight()/1.1));
@@ -39,6 +36,8 @@ public class mainApplication extends Application {
     Text clockDisplay = textGetter.getNode("#clock");
     Text smallMatchNumber2 = textGetter.getNode("#smallMatchNumber2");
     Text rank = textGetter.getNode("#rank");
+    Text partner1 = textGetter.getNode("#partner1");
+    Text partner2 = textGetter.getNode("#partner2");
     Timer clockHandler = new Timer();
     clockUpdater clock;
     Timer refreshHandler = new Timer();
@@ -49,24 +48,24 @@ public class mainApplication extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException, InterruptedException {
-        scene.getStylesheets().add(mainApplication.class.getResource("style.css").toExternalForm());
+    public void start(Stage primaryStage) throws IOException {
+        scene.getStylesheets().add(Objects.requireNonNull(mainApplication.class.getResource("style.css")).toExternalForm());
         primaryStage.getIcons().add(new Image("file:Icons\\Icon2.png"));
         primaryStage.setScene(scene);
         primaryStage.setTitle("Match Dashboard");
         primaryStage.show();
-        data.Parse(get.httpGetResponse());
+        data.Parse(Objects.requireNonNull(TBAFetcher.httpGetResponse()));
         refresh = new Refresher();
         refresh.initialize();
-        refreshHandler.schedule(refresh, 0, 30000); //refreshes data every 30s
+        refreshHandler.schedule(refresh, 30000, 30000); //refreshes data every 30s
         clock = new clockUpdater();
         clockHandler.schedule(clock, 0, 1000); //updates clock every second
     }
     private class Refresher extends TimerTask {
 
-        public void initialize() {
+        public void initialize() throws IOException {
             try {
-                data.Parse(get.httpGetResponse());
+                data.Parse(Objects.requireNonNull(TBAFetcher.httpGetResponse()));
             } catch (IOException e) {
                 throw new RuntimeException("TBA didn't respond :(");
             }
@@ -85,46 +84,56 @@ public class mainApplication extends Application {
                     nextMatch = 0;
                 }
             }
-            formattedData1 = FormattedData.getBuilder()
-                    .setActualTime(data.get(currentMatch).actual_time)
-                    .setPredictedTime(data.get(currentMatch).predicted_time)
-                    .setTime(data.get(currentMatch).time)
-                    .setMatchNumber(data.get(currentMatch).match_number)
-                    .setRank(data.get(currentMatch).rank)
-                    .setAlliance(data.get(currentMatch).myAlliance)
+            MatchData currentMatchData = data.get(currentMatch);
+            currentMatchData.setPartners();
+            MatchData nextMatchData = data.get(nextMatch);
+            currentMatchFormatted = FormattedData.getBuilder()
+                    .setActualTime(currentMatchData.actual_time)
+                    .setPredictedTime(currentMatchData.predicted_time)
+                    .setTime(currentMatchData.time)
+                    .setMatchNumber(currentMatchData.match_number)
+                    .setRank(currentMatchData.rank)
+                    .setAlliance(currentMatchData.myAlliance)
+                    .setPartners(currentMatchData.partnerNames)
                     .build();
-            formattedData2 = FormattedData.getBuilder()
-                    .setActualTime(data.get(nextMatch).actual_time)
-                    .setPredictedTime(data.get(nextMatch).predicted_time)
-                    .setTime(data.get(nextMatch).time)
-                    .setMatchNumber(data.get(nextMatch).match_number)
+            nextMatchFormatted = FormattedData.getBuilder()
+                    .setActualTime(nextMatchData.actual_time)
+                    .setPredictedTime(nextMatchData.predicted_time)
+                    .setTime(nextMatchData.time)
+                    .setMatchNumber(nextMatchData.match_number)
                     .build();
-            if (formattedData1.alliance == "blue") {
+            if (Objects.equals(currentMatchFormatted.alliance, "blue")) {
                 body.setStyle("-fx-background-color: #3470d1");
             } else {
                 body.setStyle("-fx-background-color: #d62e2e");
             }
-            nextMatchTime.setText(formattedData1.predicted_time);
-            matchTime2.setText(formattedData2.predicted_time);
-            matchNumber.setText(formattedData1.match_number);
-            smallMatchNumber2.setText(formattedData2.match_number);
-            rank.setText(formattedData1.rank);
-            System.out.println(formattedData1.rank);
+            nextMatchTime.setText(currentMatchFormatted.predicted_time);
+            matchTime2.setText(nextMatchFormatted.predicted_time);
+            matchNumber.setText(currentMatchFormatted.match_number);
+            smallMatchNumber2.setText(nextMatchFormatted.match_number);
+            rank.setText(currentMatchFormatted.rank);
+            partner1.setText(currentMatchFormatted.partners[0]);
+            partner2.setText(currentMatchFormatted.partners[1]);
+            System.out.println(currentMatchFormatted.rank);
         }
         public void run() {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    initialize();
+                    try {
+                        initialize();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }
     }
     private class clockUpdater extends TimerTask {
         public void initialize() {
-            formattedData1.update();
-            clockDisplay.setText(formattedData1.current_time);
-            countdown.setText(formattedData1.timeUntil);
+            currentMatchFormatted.update();
+            clockDisplay.setText(currentMatchFormatted.current_time);
+            countdown.setText(currentMatchFormatted.timeUntil);
         }
         public void run() {
             Platform.runLater(new Runnable() {

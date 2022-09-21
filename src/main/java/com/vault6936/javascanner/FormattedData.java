@@ -8,21 +8,17 @@ import com.vault6936.javascanner.util.TimeFormatting;
 
 public class FormattedData {
     String actual_time;
-    String event_key;
-    String key;
     String match_number;
-    long post_result_time;
     String predicted_time;
-    long set_number;
     String time;
     String current_time;
-    String matchNumber;
     String timeUntil;
     String rank;
     String alliance;
+    String[] partners;
     ZonedDateTime predictedTime_noFormat;
     ZonedDateTime currentTime_noFormat;
-    public FormattedData(String actual_time, String match_number, ZonedDateTime predictedTime, String time, String rank, String alliance) {
+    public FormattedData(String actual_time, String match_number, ZonedDateTime predictedTime, String time, String rank, String alliance, String[] partners) {
         this.actual_time = actual_time;
         this.match_number = match_number;
         this.predicted_time = TimeFormatting.timeToString(predictedTime);
@@ -30,29 +26,26 @@ public class FormattedData {
         this.time = time;
         this.rank = rank;
         this.alliance = alliance;
+        this.partners = partners;
     }
-    public long getCurrentTime() {
+    public void setCurrentTime() {
         ZonedDateTime now = ZonedDateTime.now();
         this.currentTime_noFormat = now;
         this.current_time = TimeFormatting.timeToString(now);
-        return now.toEpochSecond();
     }
     public void update() {
-        getCurrentTime();
+        setCurrentTime();
         this.timeUntil = TimeFormatting.timeUntil(currentTime_noFormat, predictedTime_noFormat);
     }
     public static class Builder {
         ZonedDateTime actual_time;
-        String event_key;
-        String key;
         String match_number;
-        long post_result_time;
         ZonedDateTime predicted_time;
-        long set_number;
         ZonedDateTime time;
         ZoneId zone;
         long rank;
         String alliance;
+        String[] partners;
         public Builder() {
             this.zone = TimeZone.getDefault().toZoneId();
         }
@@ -80,8 +73,12 @@ public class FormattedData {
             this.alliance = alliance;
             return this;
         }
+        public Builder setPartners(String[] partners) {
+            this.partners = partners;
+            return this;
+        }
         public FormattedData build() {
-            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, predicted_time, TimeFormatting.timeToString(time), String.valueOf(rank), alliance);
+            return new FormattedData(TimeFormatting.timeToString(actual_time), match_number, predicted_time, TimeFormatting.timeToString(time), String.valueOf(rank), alliance, partners);
         }
     }
     public static Builder getBuilder() {
