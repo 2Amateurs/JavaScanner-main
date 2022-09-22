@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: mainApplication
+Class-Path: com.vault6936.javascanner.mainApplication
+

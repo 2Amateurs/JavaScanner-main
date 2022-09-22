@@ -67,7 +67,7 @@ public class mainApplication extends Application {
             try {
                 data.Parse(Objects.requireNonNull(TBAFetcher.httpGetResponse()));
             } catch (IOException e) {
-                throw new RuntimeException("TBA didn't respond :(");
+                throw new RuntimeException("Error: connection timed out.");
             }
             Integer index = data.findUpcoming(TimeFormatting.getCurrentTime());
             int currentMatch;
@@ -114,7 +114,6 @@ public class mainApplication extends Application {
             rank.setText(currentMatchFormatted.rank);
             partner1.setText(currentMatchFormatted.partners[0]);
             partner2.setText(currentMatchFormatted.partners[1]);
-            System.out.println(currentMatchFormatted.rank);
         }
         public void run() {
             Platform.runLater(new Runnable() {
