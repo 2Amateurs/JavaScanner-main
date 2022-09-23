@@ -14,7 +14,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,6 +37,7 @@ public class mainApplication extends Application {
     Text rank = textGetter.getNode("#rank");
     Text partner1 = textGetter.getNode("#partner1");
     Text partner2 = textGetter.getNode("#partner2");
+    Text alliance = textGetter.getNode("#myAlliance");
     Timer clockHandler = new Timer();
     clockUpdater clock;
     Timer refreshHandler = new Timer();
@@ -114,6 +114,7 @@ public class mainApplication extends Application {
             rank.setText(currentMatchFormatted.rank);
             partner1.setText(currentMatchFormatted.partners[0]);
             partner2.setText(currentMatchFormatted.partners[1]);
+            alliance.setText("You are on the " + currentMatchFormatted.alliance + " alliance.");
         }
         public void run() {
             Platform.runLater(new Runnable() {

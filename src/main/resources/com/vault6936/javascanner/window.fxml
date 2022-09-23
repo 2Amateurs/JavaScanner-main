@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -210,9 +209,23 @@
          </Label>
       </bottom>
    </BorderPane>
-   <HBox alignment="BOTTOM_RIGHT">
-      <children>
-         <VBox alignment="CENTER">
+   <BorderPane>
+      <left>
+         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <children>
+               <Text fx:id="myAlliance" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="loading..." textAlignment="CENTER">
+                  <font>
+                     <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets bottom="-60.0" />
+                  </VBox.margin>
+               </Text>
+            </children>
+         </VBox>
+      </left>
+      <right>
+         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <children>
                <Text fx:id="rank" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="loading..." textAlignment="CENTER">
                   <font>
@@ -226,12 +239,9 @@
                </Label>
             </children>
          </VBox>
-      </children>
-      <opaqueInsets>
-         <Insets />
-      </opaqueInsets>
+      </right>
       <VBox.margin>
-         <Insets bottom="-100.0" />
+         <Insets bottom="-130.0" />
       </VBox.margin>
-   </HBox>
+   </BorderPane>
 </VBox>
