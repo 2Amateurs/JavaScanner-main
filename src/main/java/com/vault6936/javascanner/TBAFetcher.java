@@ -63,6 +63,9 @@ public class TBAFetcher {
             return new String[]{response1, response2};
         } catch (UnknownHostException e) {
             System.out.println("No internet connection.");
+        } catch (Exception e)
+        {
+            System.out.println("Unexpected exception : " + e);
         }
         return new String[]{fallBack1, fallBack2};
     }
@@ -113,7 +116,11 @@ public class TBAFetcher {
             }
             return new String[]{response1, response2};
         } catch (UnknownHostException e) {
-
+            System.out.println("No host : " + e);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Unexpected exception : " + e);
         }
         return new String[]{fallBack3, fallBack4};
     }

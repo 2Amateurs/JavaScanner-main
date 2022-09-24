@@ -38,12 +38,11 @@ public class mainApplication extends Application {
     Text partner1 = textGetter.getNode("#partner1");
     Text partner2 = textGetter.getNode("#partner2");
     Text alliance = textGetter.getNode("#myAlliance");
-    Timer clockHandler = new Timer();
+    static Timer clockHandler = new Timer();
+    static Timer refreshHandler = new Timer();
     clockUpdater clock;
-    Timer refreshHandler = new Timer();
     Refresher refresh;
-
-    public mainApplication() throws IOException{
+    public mainApplication() throws IOException {
 
     }
 
@@ -117,14 +116,11 @@ public class mainApplication extends Application {
             alliance.setText("You are on the " + currentMatchFormatted.alliance + " alliance.");
         }
         public void run() {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        initialize();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+            Platform.runLater(() -> {
+                try {
+                    initialize();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             });
         }
@@ -136,16 +132,18 @@ public class mainApplication extends Application {
             countdown.setText(currentMatchFormatted.timeUntil);
         }
         public void run() {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    initialize();
-                }
-            });
+            Platform.runLater(this::initialize);
         }
     }
 
     public static void main(String[] args) {
         launch();
+        endApplication();
+    }
+
+    public static void endApplication()
+    {
+        refreshHandler.cancel();
+        clockHandler.cancel();
     }
 }

@@ -9,6 +9,6 @@ public class FXHelper<T extends Node> {
         this.scene = scene;
     }
     public T getNode(String id) {
-        return (T) scene.lookup(id);
+            return (T) scene.lookup(id);
     }
 }
